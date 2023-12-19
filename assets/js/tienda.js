@@ -10,7 +10,44 @@ class Tienda {
         this.description = description;
         this.productos = [];
         this.carrito = [];
+        this.favoritos = [];
     }
+
+    verificarLogin(){
+        const token = document.cookie.split('=')[1];
+        if (token){
+            // preguntar al servidor api/aut/verif
+            //token
+            // alert(`usuario con sesion activa ${token}`);
+            location.href = '/tienda.html';
+        }
+    }
+
+    loginTienda(){
+
+        const API_AUTH = 'https://dummyjson.com/auth/login';
+
+        const data = {
+            username: document.querySelector('#emailTienda').value,
+            password: document.querySelector('#pwdTienda').value
+        }
+
+        axios.post(API_AUTH, data).then((data) => {
+            console.log(data.data);
+
+            const token = data.data.token;
+
+            // almacenar las cookies login
+            document.cookie = `token=${token}`;
+
+
+        }).catch((error) => {
+            console.log(error);
+        })
+
+    }
+
+
 
 
     crearTienda(){
@@ -25,6 +62,18 @@ class Tienda {
         document.querySelector('#name_store').innerHTML = this.nombre;
         document.querySelector('#descripcion_store').innerHTML = this.description;
 
+    }
+
+
+    memoryLocalTienda(){
+
+        const tienda = {
+            nombre: this.nombre,
+            logotipo: this.logotipo,
+            productos: this.productos
+        }
+        
+        localStorage.setItem('tienda',  JSON.stringify(tienda));
     }
 
     crearProducto(){
@@ -51,6 +100,10 @@ class Tienda {
 
         this.mostrarProductos();
 
+        this.memoryLocalTienda();
+
+
+
     }
 
 
@@ -70,7 +123,17 @@ class Tienda {
         })
 
 
+        this.memoryLocalTienda();
+
     }
+
+
+    getProductLocalStorage(){
+        const tienda =   JSON.parse(localStorage.getItem('tienda'));
+        this.productos = tienda.productos;
+        this.mostrarProductos();
+    }
+
 
     mostrarProductos(){
         
@@ -107,24 +170,6 @@ class Tienda {
 
 const tiendaDojo = new Tienda();
 
+// debes ejecutar en la vista tienda.html
+// tiendaDojo.getProductLocalStorage();
 
-
-
-const btnCrearTienda =  document.querySelector('#crear-tienda');
-const btnCrearproducto =  document.querySelector('#crear-producto');
-
-
-btnCrearTienda.addEventListener('click', () => {
-    tiendaDojo.crearTienda();
-})
-
-
-btnCrearproducto.addEventListener('click', () => {
-    tiendaDojo.crearProducto();
-})
-
-
-
-function eliminarProduct(){
-    console.log('elimiando');
-}

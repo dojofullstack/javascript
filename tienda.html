@@ -155,5 +155,26 @@
   
     <script src="/assets/js/tienda.js"></script>
 
+    
+    <script>
+      tiendaDojo.getProductLocalStorage();
+
+
+      const btnCrearTienda =  document.querySelector('#crear-tienda');
+      const btnCrearproducto =  document.querySelector('#crear-producto');
+
+        btnCrearTienda.addEventListener('click', () => {
+      tiendaDojo.crearTienda();
+      tiendaDojo.memoryLocalTienda();
+    })
+
+
+    btnCrearproducto.addEventListener('click', () => {
+        tiendaDojo.crearProducto();
+    })
+
+
+    </script>
+
 </body>
 </html>
